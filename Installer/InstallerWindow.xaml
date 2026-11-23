@@ -1,0 +1,175 @@
+<Window x:Class="MusicMediaKeys.Installer.InstallerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="clr-namespace:MusicMediaKeys"
+        Title="Music Media Keys Setup"
+        Width="560"
+        SizeToContent="Height"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        KeyboardNavigation.TabNavigation="None"
+        KeyboardNavigation.DirectionalNavigation="None"
+        KeyboardNavigation.ControlTabNavigation="None"
+        FocusVisualStyle="{x:Null}"
+        MouseDown="Window_MouseDown"
+        PreviewMouseDown="Window_PreviewMouseDown"
+        Deactivated="Window_Deactivated">
+
+    <Border CornerRadius="10" Background="{DynamicResource BgDark}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="52"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource BgHeader}" CornerRadius="10,10,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                        <Image x:Name="AppIcon" Width="16" Height="16" Margin="0,0,8,0"
+                               RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" UseLayoutRounding="True"/>
+                        <TextBlock x:Name="TxtHeaderTitle" Text="MUSIC MEDIA KEYS SETUP" Foreground="{DynamicResource TextGray}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                        <Button x:Name="BtnLangToggle" Style="{StaticResource TitleBarButton}" Click="BtnLangToggle_Click">
+                            <TextBlock x:Name="TxtLangBadge" Text="EN" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextGray}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="BtnThemeToggle" Style="{StaticResource TitleBarButton}" Click="BtnThemeToggle_Click">
+                            <Image x:Name="ImgThemeIcon" Width="13" Height="13" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Button>
+                        <Button x:Name="BtnClose" Style="{StaticResource TitleBarCloseButton}" Click="BtnClose_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="1" Margin="20,16,20,14">
+                <TextBlock x:Name="TxtStepTitle" Text="Добро пожаловать" Foreground="{DynamicResource TextWhite}" FontSize="16.5" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBlock x:Name="TxtStepSubtitle" Text="Выберите папку установки" Foreground="{DynamicResource TextGray}" FontSize="12" Margin="0,0,0,14" TextWrapping="Wrap"/>
+
+                <StackPanel x:Name="PanelStep1" Visibility="Visible">
+                    <TextBlock x:Name="LblInstallFolder" Text="Папка установки:" Foreground="{DynamicResource TealAccent}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="4" SnapsToDevicePixels="True">
+                            <TextBox x:Name="TxtInstallDir" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalContentAlignment="Center" Padding="8,0"/>
+                        </Border>
+                        <Button x:Name="BtnNewFolder" Grid.Column="1" Style="{StaticResource SecondaryButton}" Width="28" Height="28" Padding="0" Margin="6,0,0,0" Click="BtnNewFolder_Click">
+                            <TextBlock Text="&#xE8F4;" FontFamily="Segoe MDL2 Assets" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="BtnBrowseDir" Grid.Column="2" Style="{StaticResource SecondaryButton}" Height="28" Margin="6,0,0,0" Content="Обзор..." Click="BtnBrowseDir_Click"/>
+                    </Grid>
+
+                    <Border Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                <TextBlock x:Name="LblLanguageCatalog" Text="Каталог языков интерфейса:" Foreground="{DynamicResource TealAccent}" FontSize="12" FontWeight="Bold" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="TxtLanguageCatalogHint" Text="В установленном приложении будут доступны только выбранные языки." Foreground="{DynamicResource TextGray}" FontSize="11" Margin="0,0,0,4" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="TxtSelectedLanguagesSummary" Text="29 / 29" Foreground="{DynamicResource TextWhite}" FontSize="11" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <Button x:Name="BtnSelectLanguages" Grid.Column="1" Style="{StaticResource SecondaryButton}" Height="28" MinWidth="100" Padding="12,0" FontSize="11" VerticalAlignment="Center" Click="BtnSelectLanguages_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="6" Padding="14,10">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkPortable" Margin="0,0,0,8" Checked="ChkPortable_Changed" Unchecked="ChkPortable_Changed"/>
+                            <CheckBox x:Name="ChkDesktopShortcut" IsChecked="True" Margin="0,0,0,8"/>
+                            <CheckBox x:Name="ChkStartMenuShortcut" IsChecked="True"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="PanelStep2" Visibility="Collapsed">
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="LblTargetPlayer" Grid.Column="0" Text="Управляемый плеер:" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <app:NonModalComboBox x:Name="ComboPlayer" Grid.Column="1" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboPlayer_SelectionChanged"/>
+                    </Grid>
+
+                    <Grid x:Name="PanelCustomPlayer" Visibility="Collapsed" Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TxtCustomPlayerProcess" Grid.Column="0" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalContentAlignment="Center" Padding="8,0"/>
+                        <Button x:Name="BtnBrowseCustomPlayer" Grid.Column="1" Style="{StaticResource SecondaryButton}" Height="28" MinWidth="82" Margin="8,0,0,0" Padding="10,0" FontSize="11" Click="BtnBrowseCustomPlayer_Click"/>
+                    </Grid>
+
+                    <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,4,0,10"/>
+
+                    <TextBlock x:Name="LblHotkeys" Text="Начальные клавиши:" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="LblPrev" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                        <TextBox x:Name="TxtPrev" Grid.Row="0" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,3"/>
+
+                        <TextBlock x:Name="LblPlayPause" Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                        <TextBox x:Name="TxtPlayPause" Grid.Row="1" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,3"/>
+
+                        <TextBlock x:Name="LblNext" Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                        <TextBox x:Name="TxtNext" Grid.Row="2" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,3"/>
+                    </Grid>
+
+                    <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,2,0,10"/>
+
+                    <CheckBox x:Name="ChkAutostart" IsChecked="True" Margin="0,0,0,7"/>
+                    <CheckBox x:Name="ChkStartOpen" IsChecked="False" Margin="0,0,0,7"/>
+                    <CheckBox x:Name="ChkSkipUac" IsChecked="True" Margin="0,0,0,7"/>
+                    <CheckBox x:Name="ChkShowOverlay" IsChecked="True" Margin="0,0,0,7"/>
+                    <CheckBox x:Name="ChkStartupSound" IsChecked="False" Checked="ChkStartupSound_Changed" Unchecked="ChkStartupSound_Changed"/>
+                </StackPanel>
+
+                <StackPanel x:Name="PanelStep3" Visibility="Collapsed" Margin="0,12,0,12">
+                    <ProgressBar x:Name="InstallProgress" Height="10" Minimum="0" Maximum="100" Value="0" Background="{DynamicResource BgInput}" Foreground="{DynamicResource TealAccent}" BorderThickness="0" Margin="0,0,0,12">
+                        <ProgressBar.Template>
+                            <ControlTemplate TargetType="ProgressBar">
+                                <Border x:Name="PART_Track" Background="{TemplateBinding Background}" CornerRadius="5" ClipToBounds="True" SnapsToDevicePixels="True">
+                                    <Border x:Name="PART_Indicator" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}" CornerRadius="5" SnapsToDevicePixels="True"/>
+                                </Border>
+                            </ControlTemplate>
+                        </ProgressBar.Template>
+                    </ProgressBar>
+                    <TextBlock x:Name="TxtInstallStatus" Text="..." Foreground="{DynamicResource TextGray}" FontSize="12"/>
+                </StackPanel>
+
+                <StackPanel x:Name="PanelStep4" Visibility="Collapsed" Margin="0,6,0,6">
+                    <CheckBox x:Name="ChkLaunchNow" IsChecked="True"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Border Grid.Row="2" Background="{DynamicResource BgHeader}" CornerRadius="0,0,10,10" BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Padding="20,0">
+                <Grid>
+                    <Button x:Name="BtnBack" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" MinWidth="84" Height="28" Click="BtnBack_Click" Visibility="Collapsed"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnCancel" Style="{StaticResource SecondaryButton}" MinWidth="84" Height="28" Margin="0,0,8,0" Click="BtnClose_Click"/>
+                        <Button x:Name="BtnPrimary" Style="{StaticResource PrimaryButton}" MinWidth="96" Height="28" Click="BtnPrimary_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>MusicMediaKeys</AssemblyName>
+    <RootNamespace>MusicMediaKeys</RootNamespace>
+    <StartupObject>MusicMediaKeys.Program</StartupObject>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>2.1.0</Version>
+    <Product>Music Media Keys</Product>
+    <AssemblyTitle>Music Media Keys</AssemblyTitle>
+    <Description>Global media hotkeys for Spotify, Yandex Music and any player</Description>
+    <Company>exalesss</Company>
+    <Authors>exalesss</Authors>
+    <Copyright>Copyright © 2025-2026 exalesss</Copyright>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MusicMediaKeys.Tests\**\*.cs" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest.xml</ApplicationManifest>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="icon.ico" LogicalName="MusicMediaKeys.icon.ico" />
+    <EmbeddedResource Include="icon error.ico" LogicalName="MusicMediaKeys.icon_error.ico" />
+    <EmbeddedResource Include="Localization\locales\*.json" LogicalName="MusicMediaKeys.Locales.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Target Name="RemoveUnusedNativeFiles" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Filename)%(Extension)' == 'Microsoft.DiaSymReader.Native.amd64.dll'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CopySingleExeToRoot" AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'">
+    <MakeDir Directories="$(ProjectDir)bin\SingleExe" />
+    <Copy SourceFiles="$(PublishDir)$(AssemblyName).exe" DestinationFolder="$(ProjectDir)bin\SingleExe" Condition="Exists('$(PublishDir)$(AssemblyName).exe')" />
+  </Target>
+</Project>

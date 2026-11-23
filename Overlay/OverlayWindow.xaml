@@ -1,0 +1,194 @@
+<Window x:Class="MusicMediaKeys.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MusicMediaKeys"
+        Title="MusicMediaKeys Overlay" Height="138" Width="410"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False" Focusable="False"
+        MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave" MouseWheel="Window_MouseWheel">
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="OverlayShadow" BlurRadius="15" ShadowDepth="2" Color="#000000" Opacity="0.5"/>
+        <local:SliderFillWidthConverter x:Key="SliderFillWidthConverter"/>
+        <local:SliderKnobOffsetConverter x:Key="SliderKnobOffsetConverter"/>
+
+        <Style x:Key="OverlaySlider" TargetType="Slider">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="False"/>
+            <Setter Property="IsMoveToPointEnabled" Value="True"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid x:Name="Root" MinHeight="14" Background="Transparent">
+                            <Border x:Name="TrackBg" Background="#3A3A3E" Height="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" CornerRadius="2" VerticalAlignment="Center" SnapsToDevicePixels="True"/>
+                            <Border x:Name="Fill" Background="#00ADB5" Height="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Center" SnapsToDevicePixels="True">
+                                <Border.Width>
+                                    <MultiBinding Converter="{StaticResource SliderFillWidthConverter}">
+                                        <Binding Path="ActualWidth" ElementName="Root"/>
+                                        <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    </MultiBinding>
+                                </Border.Width>
+                            </Border>
+                            <Ellipse x:Name="Knob" Fill="White" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="False">
+                                <Ellipse.Width>
+                                    <Binding Path="Tag" RelativeSource="{RelativeSource TemplatedParent}" FallbackValue="12">
+                                        <Binding.Converter>
+                                            <local:SliderKnobSizeConverter/>
+                                        </Binding.Converter>
+                                    </Binding>
+                                </Ellipse.Width>
+                                <Ellipse.Height>
+                                    <Binding Path="Width" RelativeSource="{RelativeSource Self}"/>
+                                </Ellipse.Height>
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform>
+                                        <TranslateTransform.X>
+                                            <MultiBinding Converter="{StaticResource SliderKnobOffsetConverter}">
+                                                <Binding Path="ActualWidth" ElementName="Root"/>
+                                                <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="Width" ElementName="Knob"/>
+                                            </MultiBinding>
+                                        </TranslateTransform.X>
+                                    </TranslateTransform>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Knob" Property="Opacity" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseCaptured" Value="True">
+                                <Setter TargetName="Knob" Property="Opacity" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TimelineSlider" TargetType="Slider" BasedOn="{StaticResource OverlaySlider}">
+            <Setter Property="Tag" Value="4"/>
+        </Style>
+
+        <Style x:Key="VolumeSlider" TargetType="Slider" BasedOn="{StaticResource OverlaySlider}">
+            <Setter Property="Tag" Value="3"/>
+        </Style>
+
+        <Style x:Key="OverlayTransportButton" TargetType="Button">
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#F0F0F2"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="11">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#4400ADB5"/>
+                                <Setter Property="Foreground" Value="#00ADB5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="RootBorder" Margin="10" CornerRadius="12" Background="#1A1A1E" BorderBrush="#2A2A2E" BorderThickness="1" Effect="{StaticResource OverlayShadow}">
+        <Border.LayoutTransform>
+            <ScaleTransform x:Name="OverlayScaleTransform" ScaleX="1" ScaleY="1"/>
+        </Border.LayoutTransform>
+        <Grid Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="76"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Width="76" Height="76" CornerRadius="8" Background="#121214" ClipToBounds="True" VerticalAlignment="Center">
+                <Grid>
+                    <TextBlock Text="&#xE189;" FontFamily="Segoe MDL2 Assets" Foreground="#3A3A3E" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Image x:Name="ImgThumbnailBg" Stretch="UniformToFill" Opacity="0.4" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality">
+                        <Image.Effect>
+                            <BlurEffect Radius="16"/>
+                        </Image.Effect>
+                    </Image>
+                    <Image x:Name="ImgThumbnail" Stretch="Uniform" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <Border x:Name="HoverControlsOverlay" Background="#CC121214" Opacity="0" IsHitTestVisible="False">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="BtnOverlayPrev" Style="{StaticResource OverlayTransportButton}" Click="BtnOverlayPrev_Click">
+                                <TextBlock Text="&#xE892;" FontFamily="Segoe MDL2 Assets" FontSize="11"/>
+                            </Button>
+                            <Button x:Name="BtnOverlayPlayPause" Style="{StaticResource OverlayTransportButton}" Margin="1,0" Click="BtnOverlayPlayPause_Click">
+                                <TextBlock x:Name="TxtOverlayPlayPauseIcon" Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                            </Button>
+                            <Button x:Name="BtnOverlayNext" Style="{StaticResource OverlayTransportButton}" Click="BtnOverlayNext_Click">
+                                <TextBlock Text="&#xE893;" FontFamily="Segoe MDL2 Assets" FontSize="11"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                <StackPanel x:Name="PanelTrackInfo" Background="Transparent" Cursor="Hand" PreviewMouseLeftButtonUp="PanelTrackInfo_PreviewMouseLeftButtonUp">
+                    <Grid Margin="0,0,0,1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TxtTitle" Grid.Column="0" Text="Track Title" Foreground="White" FontSize="13" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                        <Border x:Name="BadgeCopied" Grid.Column="1" Background="#2200ADB5" BorderBrush="#00ADB5" BorderThickness="1" CornerRadius="4" Padding="5,1" Margin="6,0,0,0" Visibility="Collapsed" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtCopiedBadge" Text="✓ Скопировано" Foreground="#00ADB5" FontSize="9.5" FontWeight="SemiBold"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock x:Name="TxtArtist" Text="Artist Name" Foreground="#A0A0A5" FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,0,0,7"/>
+                </StackPanel>
+
+                <Slider x:Name="SldTimeline" Style="{StaticResource TimelineSlider}" Minimum="0" Maximum="100" Value="0"
+                        ValueChanged="SldTimeline_ValueChanged"
+                        PreviewMouseLeftButtonDown="SldTimeline_PreviewMouseLeftButtonDown"
+                        PreviewMouseMove="SldTimeline_PreviewMouseMove"
+                        PreviewMouseLeftButtonUp="SldTimeline_PreviewMouseLeftButtonUp"
+                        LostMouseCapture="SldTimeline_LostMouseCapture"/>
+
+                <Grid Margin="0,1,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="34"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" FontSize="10" Foreground="#A0A0A5" VerticalAlignment="Center">
+                        <Run x:Name="TxtTimelinePosition" Text="0:00"/><Run Text=" / " Foreground="#6A6A70"/><Run x:Name="TxtTimelineDuration" Text="0:00"/>
+                    </TextBlock>
+
+                    <TextBlock x:Name="IconSpeaker" Grid.Column="1" Text="&#xE767;" FontFamily="Segoe MDL2 Assets" Foreground="#A0A0A5" FontSize="12" VerticalAlignment="Center" Margin="0,0,7,0" Cursor="Hand" PreviewMouseDown="IconSpeaker_PreviewMouseDown"/>
+                    <Slider x:Name="SldVolume" Grid.Column="2" Style="{StaticResource VolumeSlider}" Minimum="0" Maximum="1" Value="0.5"
+                            ValueChanged="SldVolume_ValueChanged"
+                            PreviewMouseLeftButtonDown="SldVolume_PreviewMouseLeftButtonDown"
+                            PreviewMouseMove="SldVolume_PreviewMouseMove"
+                            PreviewMouseLeftButtonUp="SldVolume_PreviewMouseLeftButtonUp"
+                            LostMouseCapture="SldVolume_LostMouseCapture"/>
+                    <TextBlock x:Name="TxtVolumeValue" Grid.Column="3" Text="50%" Foreground="#A0A0A5" FontSize="10" VerticalAlignment="Center" Margin="7,0,0,0"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
