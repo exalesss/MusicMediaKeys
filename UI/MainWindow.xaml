@@ -1,0 +1,377 @@
+<Window x:Class="MusicMediaKeys.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicMediaKeys"
+        mc:Ignorable="d"
+        Title="Music Media Keys" Width="460" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        KeyboardNavigation.TabNavigation="None"
+        KeyboardNavigation.DirectionalNavigation="None"
+        KeyboardNavigation.ControlTabNavigation="None"
+        FocusVisualStyle="{x:Null}"
+        MouseDown="Window_MouseDown"
+        PreviewMouseDown="Window_PreviewMouseDown"
+        Deactivated="Window_Deactivated">
+
+    <Window.Resources>
+        <Style TargetType="ScrollViewer">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+
+        <Style x:Key="HeaderTabStyle" TargetType="RadioButton">
+            <Setter Property="Height" Value="46"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextGray}"/>
+            <Setter Property="Background" Value="{DynamicResource BgHeader}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="TabBd" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <TextBlock x:Name="TabTxt" Text="{TemplateBinding Content}" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                       Foreground="{TemplateBinding Foreground}" 
+                                       FontWeight="Normal"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="TabBd" Property="Background" Value="{DynamicResource BgDark}"/>
+                                <Setter TargetName="TabTxt" Property="Foreground" Value="{DynamicResource TealAccent}"/>
+                                <Setter TargetName="TabTxt" Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabTxt" Property="Foreground" Value="{DynamicResource TextWhite}"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TabTxt" Property="Foreground" Value="{DynamicResource TealHover}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="10" Background="{DynamicResource BgDark}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="46"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource BgHeader}" CornerRadius="10,10,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                        <Image x:Name="AppIcon" Width="16" Height="16" Margin="0,0,8,0"
+                               RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" UseLayoutRounding="True"
+                               RenderTransformOrigin="0.5,0.5"
+                               Cursor="Arrow" Focusable="False" PreviewMouseDown="AppIcon_PreviewMouseDown">
+                            <Image.RenderTransform>
+                                <RotateTransform x:Name="AppIconRotate" Angle="0"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Text="MUSIC MEDIA KEYS" Foreground="{DynamicResource TextGray}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtVersion" Foreground="{DynamicResource TextMuted}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                        <Button x:Name="BtnTooltipsToggle" Style="{StaticResource TitleBarButton}" local:CursorFollowToolTip.AlwaysShow="True" Click="BtnTooltipsToggle_Click">
+                            <TextBlock x:Name="IconTooltipsToggle" Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+
+                        <Button x:Name="BtnLangToggle" Style="{StaticResource TitleBarButton}" Click="BtnLangToggle_Click">
+                            <TextBlock x:Name="TxtLangBadge" Text="EN" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextGray}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+
+                        <Button x:Name="BtnThemeToggle" Style="{StaticResource TitleBarButton}" Click="BtnThemeToggle_Click">
+                            <Image x:Name="ImgThemeIcon" Width="13" Height="13" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Button>
+
+                        <Button x:Name="BtnClose" Style="{StaticResource TitleBarCloseButton}" Click="BtnClose_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Background="{DynamicResource BgHeader}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton x:Name="TabGeneral" Grid.Column="0" Content="Основные" Style="{StaticResource HeaderTabStyle}" IsChecked="True" Checked="Tab_Checked"/>
+                <RadioButton x:Name="TabHotkeys" Grid.Column="1" Content="Горячие клавиши" Style="{StaticResource HeaderTabStyle}" Checked="Tab_Checked"/>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="18,14">
+                <ScrollViewer x:Name="PanelGeneral" Visibility="Visible" VerticalScrollBarVisibility="Auto" MaxHeight="610" Focusable="False" FocusVisualStyle="{x:Null}">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="LblTargetPlayerHeader" Grid.Column="0" Text="Управляемый плеер:" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <local:NonModalComboBox x:Name="ComboTargetPlayer" Grid.Column="1" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboTargetPlayer_SelectionChanged"/>
+                        </Grid>
+                        <Grid x:Name="PanelCustomPlayer" Visibility="Collapsed" Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtCustomPlayerProcess" Grid.Column="0" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalContentAlignment="Center" Padding="8,0" LostFocus="TxtCustomPlayerProcess_LostFocus" KeyDown="TxtCustomPlayerProcess_KeyDown"/>
+                            <Button x:Name="BtnBrowseCustomPlayer" Grid.Column="1" Style="{StaticResource SecondaryButton}" Height="28" MinWidth="82" Margin="8,0,0,0" Padding="10,0" FontSize="11" Click="BtnBrowseCustomPlayer_Click">
+                                <TextBlock x:Name="TxtBrowseCustomPlayerBtn" Text="Обзор..."/>
+                            </Button>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,4,0,12"/>
+
+                        <TextBlock x:Name="LblLaunchHeader" Text="Запуск и система" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkAutostart" Content="Запускать вместе с Windows (Task Scheduler)" Margin="0,0,0,8" Checked="ChkAutostart_Checked" Unchecked="ChkAutostart_Unchecked"/>
+                        <CheckBox x:Name="ChkStartOpen" Content="Открывать окно приложения при старте" Margin="0,0,0,8" Checked="ChkStartOpen_Checked" Unchecked="ChkStartOpen_Unchecked"/>
+                        <CheckBox x:Name="ChkSkipUac" Content="Запуск без подтверждения UAC" Margin="0,0,0,8" Checked="ChkSkipUac_Checked" Unchecked="ChkSkipUac_Unchecked"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox x:Name="ChkStartupSound" Grid.Column="0" Content="Воспроизводить звук при запуске" VerticalAlignment="Center" Checked="ChkStartupSound_Changed" Unchecked="ChkStartupSound_Changed"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button x:Name="BtnResetStartupSound" Style="{StaticResource SecondaryButton}" Width="28" Height="28" Padding="0" Margin="0,0,6,0" Visibility="Collapsed" Click="BtnResetStartupSound_Click">
+                                    <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="11"/>
+                                </Button>
+                                <Button x:Name="BtnChooseStartupSound" Style="{StaticResource SecondaryButton}" Height="28" MinWidth="100" Padding="12,0" FontSize="11" Click="BtnChooseStartupSound_Click">
+                                    <TextBlock x:Name="TxtChooseStartupSoundBtn" Text="Выбрать"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox x:Name="ChkCheckUpdates" Content="Проверять обновления" VerticalAlignment="Center" Checked="ChkCheckUpdates_Changed" Unchecked="ChkCheckUpdates_Changed"/>
+                            <local:UpdateControl Grid.Column="1" Margin="8,0,0,0"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock x:Name="LblLanguageHeader" Text="Язык интерфейса:" Foreground="{DynamicResource TextGray}" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <local:NonModalComboBox x:Name="ComboLang" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboLang_SelectionChanged" ItemTemplate="{StaticResource LanguageItemTemplate}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock x:Name="LblThemeHeader" Text="Тема оформления:" Foreground="{DynamicResource TextGray}" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <local:NonModalComboBox x:Name="ComboTheme" Height="28" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboTheme_SelectionChanged" ItemTemplate="{StaticResource ThemeItemTemplate}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,4,0,12"/>
+
+                        <TextBlock x:Name="LblOperationModeHeader" Text="Режим работы" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkControlAny" Content="Управлять любым плеером (эмуляция клавиш)" Margin="0,0,0,10" Checked="ChkControlAny_Checked" Unchecked="ChkControlAny_Unchecked"/>
+                        <CheckBox x:Name="ChkBlockBrowser" Content="Блокировать отправку клавиш в браузер" Margin="0,0,0,10" Checked="ChkBlockBrowser_Checked" Unchecked="ChkBlockBrowser_Unchecked"/>
+                        <Grid Margin="0,-5,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox x:Name="ChkShowOverlay" Content="Показывать всплывающий оверлей трека" VerticalAlignment="Center" Margin="0" Checked="ChkShowOverlay_Checked" Unchecked="ChkShowOverlay_Unchecked"/>
+                            <Button x:Name="BtnOverlaySettings" Grid.Column="1" Style="{StaticResource SecondaryButton}" MinWidth="100" Height="28" Padding="12,0" FontSize="11" Click="BtnOverlaySettings_Click">
+                                <TextBlock x:Name="TxtOverlaySettingsBtn" Text="Настроить"/>
+                            </Button>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="LblVolumeStepHeader" Text="Шаг громкости звука:" Foreground="{DynamicResource TextGray}" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <local:NonModalComboBox x:Name="ComboVolumeStep" Grid.Column="1" Width="100" Height="28" HorizontalContentAlignment="Center" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboVolumeStep_SelectionChanged"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="LblSeekStepHeader" Text="Шаг перемотки трека:" Foreground="{DynamicResource TextGray}" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <local:NonModalComboBox x:Name="ComboSeekStep" Grid.Column="1" Width="100" Height="28" HorizontalContentAlignment="Center" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboSeekStep_SelectionChanged"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="LblVolumeDuckLevelHeader" Text="Уровень приглушения звука:" Foreground="{DynamicResource TextGray}" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <local:NonModalComboBox x:Name="ComboVolumeDuckLevel" Grid.Column="1" Width="100" Height="28" HorizontalContentAlignment="Center" Background="{DynamicResource BgInput}" BorderBrush="{DynamicResource BorderDark}" Foreground="{DynamicResource TextWhite}" SelectionChanged="ComboVolumeDuckLevel_SelectionChanged"/>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,2,0,10"/>
+
+                        <Grid Margin="0,0,0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="BtnImportSettings" Grid.Column="0" Style="{StaticResource SecondaryButton}" Height="28" Margin="0,0,6,0" Padding="10,0" FontSize="11" Click="BtnImportSettings_Click">
+                                <TextBlock x:Name="TxtImportSettingsBtn" Text="Импорт настроек"/>
+                            </Button>
+                            <Button x:Name="BtnExportSettings" Grid.Column="1" Style="{StaticResource SecondaryButton}" Height="28" Margin="6,0,0,0" Padding="10,0" FontSize="11" Click="BtnExportSettings_Click">
+                                <TextBlock x:Name="TxtExportSettingsBtn" Text="Экспорт настроек"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="PanelHotkeys" Visibility="Collapsed" VerticalScrollBarVisibility="Disabled" Focusable="False" FocusVisualStyle="{x:Null}">
+                    <StackPanel>
+                        <Border x:Name="BannerHotkeysHint" Background="{DynamicResource BgHover}" CornerRadius="6" Padding="10,6" Margin="0,0,0,12" SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0">
+                                    <TextBlock Text="&#xEA80;" FontFamily="Segoe MDL2 Assets" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TealAccent}"/>
+                                </Border>
+                                <TextBlock x:Name="TxtHotkeysHint" Grid.Column="1" Text="Кликните по полю для назначения. Правый клик — выбор из списка / очистки." Foreground="{DynamicResource TextGray}" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap" LineHeight="15"/>
+                                <Button x:Name="BtnCloseHotkeysHint" Grid.Column="2" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextGray}" Click="BtnCloseHotkeysHint_Click" Cursor="Hand" Margin="8,0,0,0" Focusable="False" IsTabStop="False" FocusVisualStyle="{x:Null}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="3">
+                                                            <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgCard}"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource TextWhite}"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <Grid x:Name="GridHotkeys">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="LblPlaybackHeader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Управление воспроизведением" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                            <TextBlock x:Name="LblPrev" Grid.Row="1" Grid.Column="0" Text="Предыдущий трек:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtPrev" Grid.Row="1" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+
+                            <TextBlock x:Name="LblPlay" Grid.Row="2" Grid.Column="0" Text="Играть / Пауза:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtPlay" Grid.Row="2" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+
+                            <TextBlock x:Name="LblNext" Grid.Row="3" Grid.Column="0" Text="Следующий трек:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtNext" Grid.Row="3" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+
+                            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
+                            <TextBlock x:Name="LblVolumeHeader" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="Регулировка громкости" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                            <Border x:Name="BannerVolumeHint" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource BgHover}" CornerRadius="6" Padding="10,6" Margin="0,0,0,8" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0">
+                                        <TextBlock Text="&#xE767;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TealAccent}"/>
+                                    </Border>
+                                    <TextBlock x:Name="TxtVolumeHint" Grid.Column="1" Text="Громкость конкретного плеера регулируется через системный микшер громкости Windows." Foreground="{DynamicResource TextGray}" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap" LineHeight="15"/>
+                                    <Button x:Name="BtnCloseVolumeHint" Grid.Column="2" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextGray}" Click="BtnCloseVolumeHint_Click" Cursor="Hand" Margin="8,0,0,0" Focusable="False" IsTabStop="False" FocusVisualStyle="{x:Null}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="3">
+                                                                <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgCard}"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource TextWhite}"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock x:Name="LblVolDown" Grid.Row="7" Grid.Column="0" Text="Уменьшить громкость:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtVolDown" Grid.Row="7" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+
+                            <TextBlock x:Name="LblVolUp" Grid.Row="8" Grid.Column="0" Text="Увеличить громкость:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtVolUp" Grid.Row="8" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+
+                            <TextBlock x:Name="LblVolMute" Grid.Row="9" Grid.Column="0" Text="Выключить звук:" Foreground="{DynamicResource TextWhite}" FontSize="12" VerticalAlignment="Center" Margin="0,6,10,6"/>
+                            <TextBox x:Name="TxtVolMute" Grid.Row="9" Grid.Column="1" Style="{StaticResource HotkeyBox}" Height="30" Margin="0,4"/>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
+                        <TextBlock x:Name="LblAppActionsHeader" Text="Действия приложения" Foreground="{DynamicResource TealAccent}" FontSize="12.5" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                        <StackPanel x:Name="StackAppActions" Margin="0,0,0,8"/>
+
+                        <local:NonModalComboBox x:Name="ComboAddAction" HorizontalAlignment="Left" MinWidth="130" Height="28" Tag="Добавить действие" Foreground="{DynamicResource TealAccent}" SelectionChanged="ComboAddAction_SelectionChanged"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

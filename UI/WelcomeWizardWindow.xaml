@@ -1,0 +1,184 @@
+<Window x:Class="MusicMediaKeys.WelcomeWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MusicMediaKeys"
+        Title="Music Media Keys — Быстрая настройка" 
+        Width="640" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        KeyboardNavigation.TabNavigation="None"
+        KeyboardNavigation.DirectionalNavigation="None"
+        KeyboardNavigation.ControlTabNavigation="None"
+        MouseDown="Window_MouseDown">
+
+    <Window.Resources>
+        <Style x:Key="InfoBadgeStyle" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextGray}"/>
+            <Setter Property="Cursor" Value="Help"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="10">
+                            <Grid Width="14" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Ellipse Stroke="{TemplateBinding Foreground}" StrokeThickness="1.2"/>
+                                <Ellipse Width="2" Height="2" Margin="0,3.2,0,0" VerticalAlignment="Top" Fill="{TemplateBinding Foreground}"/>
+                                <Rectangle Width="1.5" Height="4.5" Margin="0,6,0,0" VerticalAlignment="Top" RadiusX="0.75" RadiusY="0.75" Fill="{TemplateBinding Foreground}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TealAccent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource BgDark}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource BgHeader}" CornerRadius="10,10,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                        <Image x:Name="AppIcon" Width="16" Height="16" Margin="0,0,8,0"
+                               RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" UseLayoutRounding="True"/>
+                        <TextBlock Text="MUSIC MEDIA KEYS" Foreground="{DynamicResource TextGray}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtVersion" Foreground="{DynamicResource TextMuted}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                        <Button x:Name="BtnLangToggle" Style="{StaticResource TitleBarButton}" Click="BtnLangToggle_Click">
+                            <TextBlock x:Name="TxtLangBadge" Text="EN" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextGray}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+
+                        <Button x:Name="BtnThemeToggle" Style="{StaticResource TitleBarButton}" Click="BtnThemeToggle_Click">
+                            <Image x:Name="ImgThemeIcon" Width="13" Height="13" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Button>
+
+                        <Button x:Name="BtnClose" Style="{StaticResource TitleBarCloseButton}" Click="BtnClose_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="1" Margin="22,12,22,12">
+                <StackPanel Margin="0,0,0,14">
+                    <TextBlock x:Name="TxtWelcomeTitle" Text="Быстрая настройка" Foreground="{DynamicResource TextWhite}" FontSize="16" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <Grid Height="38">
+                        <TextBlock x:Name="TxtWelcomeSubtitle" Text="Настройте основные параметры перед первым запуском. Все настройки можно в любой момент изменить в окне программы." Foreground="{DynamicResource TextGray}" FontSize="12" TextWrapping="Wrap" LineHeight="17" VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="6" Padding="14,12" Margin="0,0,6,0">
+                        <StackPanel>
+                            <TextBlock x:Name="TxtGeneralHeader" Text="Основные" Foreground="{DynamicResource TealAccent}" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                            <Grid Height="24" Margin="0,0,0,4">
+                                <CheckBox x:Name="ChkAutoStart" Content="Запуск с Windows" IsChecked="True" FontSize="12" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Height="24" Margin="0,0,0,4">
+                                <CheckBox x:Name="ChkSkipUac" Content="Запуск без запроса UAC" IsChecked="True" FontSize="12" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Height="24" Margin="0,0,0,8">
+                                <CheckBox x:Name="ChkStartWithWindowOpen" Content="Открывать окно при старте" IsChecked="False" FontSize="12" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Height="20" Margin="0,0,0,3">
+                                <TextBlock x:Name="TxtTargetPlayer" Text="Целевой плеер:" Foreground="{DynamicResource TextGray}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <Button x:Name="BtnTargetAppInfo" Style="{StaticResource InfoBadgeStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <local:NonModalComboBox x:Name="ComboTargetApp" Height="28" FontSize="12" Margin="0,0,0,8" SelectionChanged="ComboTargetApp_SelectionChanged"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock x:Name="TxtLanguage" Text="Язык интерфейса" Foreground="{DynamicResource TextGray}" FontSize="12" FontWeight="SemiBold" Height="20" Margin="0,0,0,3"/>
+                                    <local:NonModalComboBox x:Name="ComboLanguage" Height="28" FontSize="12" ItemTemplate="{StaticResource LanguageItemTemplate}" SelectionChanged="ComboLanguage_SelectionChanged"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock x:Name="TxtTheme" Text="Тема" Foreground="{DynamicResource TextGray}" FontSize="12" FontWeight="SemiBold" Height="20" Margin="0,0,0,3"/>
+                                    <local:NonModalComboBox x:Name="ComboTheme" Height="28" FontSize="12" ItemTemplate="{StaticResource ThemeItemTemplate}" SelectionChanged="ComboTheme_SelectionChanged"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="6" Padding="14,12" Margin="6,0,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Height="20">
+                                <TextBlock x:Name="TxtHotkeysHeader" Text="Горячие клавиши" Foreground="{DynamicResource TealAccent}" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <Button x:Name="BtnHotkeysInfo" Style="{StaticResource InfoBadgeStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+                                <TextBlock x:Name="TxtPrevLabel" Text="Предыдущий трек:" Foreground="{DynamicResource TextGray}" FontSize="12" Height="18" Margin="0,0,0,3"/>
+                                <TextBox x:Name="TxtPrev" Style="{StaticResource HotkeyBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+                                <TextBlock x:Name="TxtPlayLabel" Text="Воспроизведение / Пауза:" Foreground="{DynamicResource TextGray}" FontSize="12" Height="18" Margin="0,0,0,3"/>
+                                <TextBox x:Name="TxtPlay" Style="{StaticResource HotkeyBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
+                                <TextBlock x:Name="TxtNextLabel" Text="Следующий трек:" Foreground="{DynamicResource TextGray}" FontSize="12" Height="18" Margin="0,0,0,3"/>
+                                <TextBox x:Name="TxtNext" Style="{StaticResource HotkeyBox}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Border Background="{DynamicResource BgCard}" BorderBrush="{DynamicResource BorderDark}" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,12,0,0">
+                    <StackPanel>
+                        <Grid Height="20">
+                            <TextBlock x:Name="TxtAdminHeader" Text="Права администратора" Foreground="{DynamicResource TealAccent}" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Button x:Name="BtnAdminInfo" Style="{StaticResource InfoBadgeStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock x:Name="TxtAdminDesc" Text="Приложение работает с правами администратора для гарантированного перехвата клавиш поверх всех окон и игр. Опция «Запуск без запроса UAC» позволяет стартовать без повторных подтверждений." Foreground="{DynamicResource TextGray}" FontSize="11.5" TextWrapping="Wrap" LineHeight="16" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <Border Grid.Row="2" Background="{DynamicResource BgHeader}" CornerRadius="0,0,10,10" BorderBrush="{DynamicResource BorderDark}" BorderThickness="0,1,0,0" Padding="22,12">
+                <Button x:Name="BtnSaveAndRun" Style="{StaticResource PrimaryButton}" Height="36" FontSize="12.5" Click="BtnSaveAndRun_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtSaveAndRun" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
